@@ -1,8 +1,8 @@
 #include "BrickManager.h"
 #include "GameManager.h"
 
-BrickManager::BrickManager(sf::RenderWindow* window, GameManager* gameManager)
-    : _window(window), _gameManager(gameManager)
+BrickManager::BrickManager(GameManager* gameManager)
+    : _gameManager(gameManager)
 {
 }
 
@@ -10,9 +10,9 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
 {
     float leftEdge;
     if (cols % 2 == 0) 
-        leftEdge = _window->getSize().x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
+        leftEdge = GAME_DIMENSIONS.x / 2 - ((cols / 2.0f) * brickWidth + (cols / 2.0f - 0.5f) * spacing);
     else
-        leftEdge = _window->getSize().x / 2 - ((cols / 2.0f - 0.5f) * brickWidth + (cols / 2.0f) * spacing);
+        leftEdge = GAME_DIMENSIONS.x / 2 - ((cols / 2.0f - 0.5f) * brickWidth + (cols / 2.0f) * spacing);
 
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
@@ -23,10 +23,10 @@ void BrickManager::createBricks(int rows, int cols, float brickWidth, float bric
     }
 }
 
-void BrickManager::render()
+void BrickManager::render(sf::RenderWindow& window)
 {
     for (auto& brick : _bricks) {
-        brick.render(*_window);
+        brick.render(window);
     }
 }
 

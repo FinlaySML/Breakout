@@ -50,4 +50,5 @@ const sf::Color ballEffectsColour = sf::Color(100, 100, 200, 255); // blue-ish?
 const sf::Color paddleEffectsColour = sf::Color(255, 250, 205); // lemon chiffon -- very fancy.
 const sf::Color extraBallEffectsColour = sf::Color(41, 110, 1); // metallic green
 
-
+// Game
+const sf::Vector2 GAME_DIMENSIONS(1000, 800);

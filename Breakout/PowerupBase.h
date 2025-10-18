@@ -6,17 +6,17 @@
 #include "Ball.h"
 #include <vector>
 
-#include "PowerupFireBall.h"
+//#include "PowerupFireBall.h"
 
 
 class PowerupBase
 {
 public:
-    PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball);
+    PowerupBase(Paddle* paddle, Ball* ball);
     virtual ~PowerupBase();
 
     void update(float dt);
-    void render();
+    void render(sf::RenderWindow& window);
 
     virtual std::pair<POWERUPS, float> applyEffect() = 0; // Pure virtual method for applying the power-up effect
     bool checkCollisionWithPaddle();
@@ -40,6 +40,4 @@ protected: // Protected so derived classes can access these members
     // Render
     sf::CircleShape _sprite;
     sf::Color _colour;
-    sf::RenderWindow* _window;
-
 };

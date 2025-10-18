@@ -2,17 +2,16 @@
 #include <cmath>
 #include <iostream>
 
-PowerupBase::PowerupBase(sf::RenderWindow* window, Paddle* paddle, Ball* ball)
+PowerupBase::PowerupBase(Paddle* paddle, Ball* ball)
     : _time(0.0f) // Initialize the time variable
 {
-    _window = window;
     _paddle = paddle;
     _sprite.setRadius(RADIUS);
     _isAlive = true;
     _ball = ball;
 
     // Initial position and direction with some variability
-    float initialX = rand() % window->getSize().x * 0.9 + window->getSize().x * 0.05;
+    float initialX = rand() % GAME_DIMENSIONS.x * 0.9 + GAME_DIMENSIONS.x * 0.05;
     _sprite.setPosition(initialX, 5);
     _direction = { 0.0f, FLOAT_DOWN_SPEED };
 
@@ -42,16 +41,16 @@ void PowerupBase::update(float dt)
     //_sprite.setFillColor(sf::Color(static_cast<sf::Uint8>(_colours[0]), static_cast<sf::Uint8>(_colours[1]), static_cast<sf::Uint8>(_colours[2]), 255));
 
     // Collide with floor (i.e., was missed)
-    if (_sprite.getPosition().y + RADIUS * 2 >= _window->getSize().y)
+    if (_sprite.getPosition().y + RADIUS * 2 >= GAME_DIMENSIONS.y)
     {
         _isAlive = false;
     }
 
 }
 
-void PowerupBase::render()
+void PowerupBase::render(sf::RenderWindow& window)
 {
-    _window->draw(_sprite);
+    window.draw(_sprite);
 }
 
 bool PowerupBase::checkCollisionWithPaddle()

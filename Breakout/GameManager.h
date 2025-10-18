@@ -12,20 +12,18 @@
 
 class GameManager {
 public:
-    GameManager(sf::RenderWindow* window);
+    GameManager();
     void initialize();
     void update(float dt);
     void loseLife();
-    void render();
+    void render(sf::RenderWindow& window);
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;
     PowerupManager* getPowerupManager() const;
-    sf::RenderWindow* getWindow() const;
     UI* getUI() const;
-
 
 private:
     bool _pause;
@@ -39,7 +37,6 @@ private:
     sf::Font _font;
     sf::Text _masterText;
 
-    sf::RenderWindow* _window;
     Paddle* _paddle;
     Ball* _ball;
     BrickManager* _brickManager;

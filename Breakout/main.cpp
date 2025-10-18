@@ -4,9 +4,8 @@
 
 int main()
 {
-
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Breakout");
-    GameManager gameManager(&window);
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Breakout");
+    GameManager gameManager{};
     gameManager.initialize();
 
     sf::Clock clock;
@@ -24,9 +23,8 @@ int main()
         deltaTime = clock.restart().asSeconds();
 
         gameManager.update(deltaTime);
-
         window.clear();
-        gameManager.render();
+        gameManager.render(window);
         window.display();
     }
 

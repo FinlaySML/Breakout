@@ -3,8 +3,8 @@
 #include "PowerupManager.h"
 #include <iostream>
 
-GameManager::GameManager(sf::RenderWindow* window)
-    : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
+GameManager::GameManager()
+    : _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
@@ -17,12 +17,12 @@ GameManager::GameManager(sf::RenderWindow* window)
 
 void GameManager::initialize()
 {
-    _paddle = new Paddle(_window);
-    _brickManager = new BrickManager(_window, this);
-    _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
-    _powerupManager = new PowerupManager(_window, _paddle, _ball);
-    _ui = new UI(_window, _lives, this);
+    _paddle = new Paddle();
+    _brickManager = new BrickManager(this);
+    _messagingSystem = new MessagingSystem();
+    _ball = new Ball(400.0f, this); 
+    _powerupManager = new PowerupManager(_paddle, _ball);
+    _ui = new UI(_lives, this);
 
     // Create bricks
     _brickManager->createBricks(5, 10, 80.0f, 30.0f, 5.0f);
@@ -95,14 +95,33 @@ void GameManager::loseLife()
     // TODO screen shake.
 }
 
-void GameManager::render()
+void GameManager::render(sf::RenderWindow& window)
 {
-    _paddle->render();
-    _ball->render();
-    _brickManager->render();
-    _powerupManager->render();
-    _window->draw(_masterText);
-    _ui->render();
+    {// Update view based on window size
+        sf::Vector2f viewportDim(1, 1);
+        float windowAspect = window.getSize().x / (float)window.getSize().y;
+        float cameraAspect = GAME_DIMENSIONS.x / (float)GAME_DIMENSIONS.y;
+        if (windowAspect > cameraAspect) {// Too wide = black bars on the sides
+            viewportDim.x = cameraAspect / windowAspect;
+        } else {// Too tall = black bars on the top and bottom
+            viewportDim.y = windowAspect / cameraAspect;
+        }
+        sf::View view(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(GAME_DIMENSIONS)));
+        view.setViewport(sf::FloatRect(sf::Vector2f(0.5f, 0.5f) - viewportDim * 0.5f, viewportDim));
+        window.setView(view);
+    }
+    {// Draw background (the clear color is black to create black bars)
+        sf::RectangleShape background(window.getView().getSize());
+        background.setPosition(window.getView().getCenter() - window.getView().getSize() / 2.0f);
+        background.setFillColor(sf::Color(20, 20, 30));
+        window.draw(background);
+    }
+    _paddle->render(window);
+    _ball->render(window);
+    _brickManager->render(window);
+    _powerupManager->render(window);
+    window.draw(_masterText);
+    _ui->render(window);
 }
 
 void GameManager::levelComplete()
@@ -110,7 +129,6 @@ void GameManager::levelComplete()
     _levelComplete = true;
 }
 
-sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }
 BrickManager* GameManager::getBrickManager() const { return _brickManager; }

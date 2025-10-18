@@ -7,9 +7,9 @@ class GameManager;
 
 class BrickManager {
 public:
-    BrickManager(sf::RenderWindow* window, GameManager* gameManager);
+    BrickManager(GameManager* gameManager);
     void createBricks(int rows, int cols, float brickWidth, float brickHeight, float spacing);
-    void render();
+    void render(sf::RenderWindow& window);
     int checkCollision(sf::CircleShape& ball, sf::Vector2f& direction);
 
 private:
