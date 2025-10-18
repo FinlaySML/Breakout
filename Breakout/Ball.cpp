@@ -50,12 +50,14 @@ void Ball::update(float dt)
     if ((position.x >= GAME_DIMENSIONS.x - 2 * RADIUS && _direction.x > 0) || (position.x <= 0 && _direction.x < 0))
     {
         _direction.x *= -1;
+        _gameManager->addScreenShake(0.07f);
     }
 
     // bounce on ceiling
     if (position.y <= 0 && _direction.y < 0)
     {
         _direction.y *= -1;
+        _gameManager->addScreenShake(0.07f);
     }
 
     // lose life bounce
@@ -70,6 +72,7 @@ void Ball::update(float dt)
     if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
     {
         _direction.y *= -1; // Bounce vertically
+        _gameManager->addScreenShake(0.15f);
 
         float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
         _direction.x = paddlePositionProportion * 2.0f - 1.0f;
@@ -79,15 +82,17 @@ void Ball::update(float dt)
     }
 
     // collision with bricks
-    int collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
+    BrickCollision collisionResponse = _gameManager->getBrickManager()->checkCollision(_sprite, _direction);
     if (_isFireBall) return; // no collisisons when in fireBall mode.
-    if (collisionResponse == 1)
+    if (collisionResponse == BrickCollision::horizontal)
     {
         _direction.x *= -1; // Bounce horizontally
+        _gameManager->addScreenShake(0.15f);
     }
-    else if (collisionResponse == 2)
+    else if (collisionResponse == BrickCollision::vertical)
     {
         _direction.y *= -1; // Bounce vertically
+        _gameManager->addScreenShake(0.15f);
     }
 }
 

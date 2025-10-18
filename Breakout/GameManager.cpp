@@ -6,7 +6,7 @@
 GameManager::GameManager()
     : _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
+    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _screenShakePower(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -30,6 +30,12 @@ void GameManager::initialize()
 
 void GameManager::update(float dt)
 {
+    // Update screen shake
+    _screenShakePower -= dt;
+    if (_screenShakePower < 0.0f) {
+        _screenShakePower = 0.0f;
+    }
+    
     _powerupInEffect = _powerupManager->getPowerupInEffect();
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
@@ -92,7 +98,7 @@ void GameManager::loseLife()
     _lives--;
     _ui->lifeLost(_lives);
 
-    // TODO screen shake.
+    addScreenShake(0.25f);
 }
 
 void GameManager::render(sf::RenderWindow& window)
@@ -110,6 +116,15 @@ void GameManager::render(sf::RenderWindow& window)
         view.setViewport(sf::FloatRect(sf::Vector2f(0.5f, 0.5f) - viewportDim * 0.5f, viewportDim));
         window.setView(view);
     }
+    {// Adjust view based on screen shake
+        sf::View view = window.getView();
+        sf::Vector2f shake(
+            _screenShakePower * (rand() % 81 - 40),
+            _screenShakePower * (rand() % 81 - 40)
+        );
+        view.setCenter(sf::Vector2f(GAME_DIMENSIONS) * 0.5f + shake);
+        window.setView(view);
+    }
     {// Draw background (the clear color is black to create black bars)
         sf::RectangleShape background(window.getView().getSize());
         background.setPosition(window.getView().getCenter() - window.getView().getSize() / 2.0f);
@@ -120,6 +135,11 @@ void GameManager::render(sf::RenderWindow& window)
     _ball->render(window);
     _brickManager->render(window);
     _powerupManager->render(window);
+    {// Stop screen shake from affecting UI
+        sf::View view = window.getView();
+        view.setCenter(sf::Vector2f(GAME_DIMENSIONS) * 0.5f);
+        window.setView(view);
+    }
     window.draw(_masterText);
     _ui->render(window);
 }
@@ -127,6 +147,12 @@ void GameManager::render(sf::RenderWindow& window)
 void GameManager::levelComplete()
 {
     _levelComplete = true;
+}
+
+void GameManager::addScreenShake(float amount) {
+    if (amount > _screenShakePower) {
+        _screenShakePower = amount;
+    }
 }
 
 UI* GameManager::getUI() const { return _ui; }
