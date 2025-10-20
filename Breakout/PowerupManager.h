@@ -24,6 +24,8 @@ public:
     void spawnPowerup(); // Method to spawn a power-up
     void checkCollision(); // Check collision with paddle
     int getPowerupsSpawned();
+    int getPowerupCount() const;
+    void resetPowerupCount();
     std::pair<POWERUPS, float> getPowerupInEffect();
 
 private:
@@ -31,4 +33,5 @@ private:
     Ball* _ball;
     std::vector<PowerupBase*> _powerups;            // used to manage deletion.
     std::optional<std::pair<POWERUPS, float>> _powerupInEffect;    // used for gameManager to get reference.
+    int _powerupCount;
 };

@@ -8,10 +8,12 @@
 class StarShape : public sf::Shape {
 public:
     explicit StarShape(int points, float innerRadius, float outerRadius);
+    void setInnerRadius(float radius);
+    void setOuterRadius(float radius);
     std::size_t getPointCount() const override;
     sf::Vector2f getPoint(std::size_t index) const override;
 private:
-    int m_points;
-    float m_innerRadius;
-    float m_outerRadius;
+    int _points;
+    float _innerRadius;
+    float _outerRadius;
 };

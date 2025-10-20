@@ -39,7 +39,16 @@ void GameManager::update(float dt)
     _ui->updatePowerupText(_powerupInEffect);
     _powerupInEffect.second -= dt;
     
-
+    // Update lives
+    if (_lives == INITIAL_LIVES) {
+        _powerupManager->resetPowerupCount();
+    }
+    else if (_powerupManager->getPowerupCount() >= POWERUP_COUNT_FOR_LIFE) {
+        _lives++;
+        _ui->setLives(_lives);
+        _powerupManager->resetPowerupCount();
+    }
+    _ui->setNewLifeFraction(_powerupManager->getPowerupCount() / (float)POWERUP_COUNT_FOR_LIFE);
     if (_lives <= 0)
     {
         _masterText.setString("Game over.");
@@ -90,12 +99,13 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _ui->update(dt);
 }
 
 void GameManager::loseLife()
 {
     _lives--;
-    _ui->lifeLost(_lives);
+    _ui->setLives(_lives);
 
     addScreenShake(0.25f);
 }

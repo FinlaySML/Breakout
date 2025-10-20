@@ -14,7 +14,9 @@ public:
 	~UI();
 
 	void updatePowerupText(std::pair<POWERUPS, float>);
-	void lifeLost(int lives);
+	void setLives(int lives);
+	void setNewLifeFraction(float fraction);
+	void update(float dt);
 	void render(sf::RenderWindow& window);
 
 private:
@@ -23,7 +25,10 @@ private:
 	sf::Font _font;
 	sf::Text _powerupText;
 
-	std::vector<sf::CircleShape> _lives;
+	sf::CircleShape _lifeCircle;
+	StarShape _newLifeStar;
+	int _lives = INITIAL_LIVES;
+	float _newLifeFraction = 0.0f;
 
 	static constexpr float LIFE_RADIUS = 15.0f;
 	static constexpr float LIFE_PADDING = 20.0f;

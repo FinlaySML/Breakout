@@ -2,7 +2,7 @@
 
 
 PowerupManager::PowerupManager(Paddle* paddle, Ball* ball)
-    : _paddle(paddle), _ball(ball)
+    : _paddle(paddle), _ball(ball), _powerupCount(0)
 {
 }
 
@@ -89,6 +89,7 @@ void PowerupManager::checkCollision()
         if (powerup->checkCollisionWithPaddle())
         {
             _powerupInEffect = powerup->applyEffect();
+            _powerupCount++;
             powerup->setAlive(false);
         }
     }
@@ -97,6 +98,14 @@ void PowerupManager::checkCollision()
 int PowerupManager::getPowerupsSpawned()
 {
     return _powerups.size();
+}
+
+int PowerupManager::getPowerupCount() const {
+    return _powerupCount;
+}
+
+void PowerupManager::resetPowerupCount() {
+    _powerupCount = 0;
 }
 
 std::pair<POWERUPS, float> PowerupManager::getPowerupInEffect()

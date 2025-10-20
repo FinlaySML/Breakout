@@ -44,6 +44,7 @@ constexpr float UI_LIFE_PADDING = 20.0f;
 constexpr float PAUSE_TIME_BUFFER = 0.5f;
 constexpr float POWERUP_MIN_TIME = 7.5f;
 constexpr float POWERUP_MAX_TIME = 22.5f;
+constexpr int POWERUP_COUNT_FOR_LIFE = 3;
 constexpr int INITIAL_LIVES = 3;
 
 // Colour Palette
