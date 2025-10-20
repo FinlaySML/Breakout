@@ -5,9 +5,7 @@
 #include "Paddle.h"
 #include "Ball.h"
 #include <vector>
-
-//#include "PowerupFireBall.h"
-
+#include "StarShape.h"
 
 class PowerupBase
 {
@@ -38,6 +36,6 @@ protected: // Protected so derived classes can access these members
     sf::Vector2f _direction;
 
     // Render
-    sf::CircleShape _sprite;
+    StarShape _sprite;
     sf::Color _colour;
 };

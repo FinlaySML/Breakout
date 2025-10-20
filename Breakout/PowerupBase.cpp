@@ -3,10 +3,10 @@
 #include <iostream>
 
 PowerupBase::PowerupBase(Paddle* paddle, Ball* ball)
-    : _time(0.0f) // Initialize the time variable
+    : _time(0.0f), // Initialize the time variable
+    _sprite(10, RADIUS*0.9f, RADIUS*1.1f)
 {
     _paddle = paddle;
-    _sprite.setRadius(RADIUS);
     _isAlive = true;
     _ball = ball;
 
@@ -31,7 +31,7 @@ void PowerupBase::update(float dt)
 
     // Move the power-up
     _sprite.move(_direction.x * dt, _direction.y * dt);
-
+    _sprite.rotate(dt * 100.0f);
     //// Smooth color changes
     //for (int i = 0; i < _colours.size(); ++i)
     //{
