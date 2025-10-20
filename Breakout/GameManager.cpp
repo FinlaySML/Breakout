@@ -1,12 +1,11 @@
 #include "GameManager.h"
 #include "Ball.h"
 #include "PowerupManager.h"
-#include <iostream>
 
 GameManager::GameManager()
     : _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
     _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
-    _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f), _screenShakePower(0.f)
+    _powerupInEffect({ none,0.f }), _nextPowerUpTime(POWERUP_MIN_TIME), _screenShakePower(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
@@ -77,10 +76,10 @@ void GameManager::update(float dt)
     _time += dt;
 
 
-    if (_time > _timeLastPowerupSpawned + POWERUP_FREQUENCY && rand()%700 == 0)      // TODO parameterise
+    if (_time > _nextPowerUpTime)
     {
         _powerupManager->spawnPowerup();
-        _timeLastPowerupSpawned = _time;
+        _nextPowerUpTime += POWERUP_MIN_TIME + (rand() / (double) RAND_MAX) * (POWERUP_MAX_TIME - POWERUP_MIN_TIME);
     }
 
     // move paddle
